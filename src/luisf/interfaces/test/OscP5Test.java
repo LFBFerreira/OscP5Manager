@@ -17,7 +17,7 @@ public class OscP5Test extends PApplet {
     public OscP5Test() {
     }
 
-    // -================================================================
+    // ================================================================
 
     /**
      * Dispose Method
@@ -67,10 +67,23 @@ public class OscP5Test extends PApplet {
             // example using TouchOSC's "Simple" Layout controls
             if (input.isPage("1") && input.isName("fader1")) {
                 backgroundRed = input.getAsInt(0, 255);
+
             } else if (input.isPage("1") && input.isName("fader2")) {
                 backgroundGreen = input.getAsInt(0, 255);
+
             } else if (input.isPage("1") && input.isName("fader3")) {
                 backgroundBlue = input.getAsInt(0, 255);
+
+            } else if (input.isPage("2") && input.isName("push1") && input.isPressed()) {
+                backgroundRed = (int) random(0,255);
+                backgroundGreen = (int) random(0,255);
+                backgroundBlue = (int) random(0,255);
+            }
+
+            else if (input.isPage("2") && input.isName("push2") && input.isReleased()) {
+                backgroundRed = (int) random(0,255);
+                backgroundGreen = (int) random(0,255);
+                backgroundBlue = (int) random(0,255);
             }
         }
     };

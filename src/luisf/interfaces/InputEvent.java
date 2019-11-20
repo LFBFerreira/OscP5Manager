@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class InputEvent {
-    private static Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
-
     public final InputMethodEnum inputMethod;
 
     public String id = "";
@@ -34,7 +32,7 @@ public class InputEvent {
 
     public float getAsFloat() {
         if (values.isEmpty()) {
-            log.severe("There are no values for this input");
+            System.out.println("There are no values for this input");
             return 0;
         }
 
@@ -45,13 +43,17 @@ public class InputEvent {
         return map(getAsFloat(), 0, 1, min, max);
     }
 
+    public int getAsInt() {
+        return values.get(0).intValue();
+    }
+
     public int getAsInt(int min, int max) {
         return Math.round(map(getAsFloat(), 0, 1, min, max));
     }
 
     public Boolean getAsBoolean() {
         if (values.isEmpty()) {
-            log.severe("There are no values for this input");
+            System.out.println("There are no values for this input");
             return false;
         }
 
@@ -60,7 +62,7 @@ public class InputEvent {
 
     public PVector getAsXY() {
         if (values.size() < 2) {
-            log.severe("There are not enough values for this input");
+            System.out.println("There are not enough values for this input");
             return new PVector();
         }
 
@@ -97,14 +99,14 @@ public class InputEvent {
                     try {
                         value = message.get(i).floatValue();
                     } catch (NumberFormatException e) {
-                        log.severe("EXCEPTION!");
+                        System.out.println("Number format exception");
                         e.printStackTrace();
                     }
                     values.add(value);
                     break;
 
                 default:
-                    log.severe("Could not parse the type of the OSC message");
+                    System.out.println("Could not parse the type of the OSC message");
             }
         }
 
@@ -132,8 +134,17 @@ public class InputEvent {
         return group.equals(getGroup());
     }
 
+    public boolean isPressed() {
+        return getAsInt() == 1;
+    }
+
+    public boolean isReleased() {
+        return getAsInt() == 0;
+    }
+
+
     public String getPage() {
-        if (id.equals("")) {
+        if (id.isEmpty()) {
             return "";
         }
 
@@ -146,12 +157,12 @@ public class InputEvent {
     }
 
     public String getName() {
-        if (id.equals("")) {
+        if (id.isEmpty()) {
             return "";
         }
 
         String[] parts = id.split(separatingChar);
-        if (parts.length >= 2) {
+        if (parts.length > 2) {
             return parts[2];
         } else {
             return "";
@@ -159,12 +170,12 @@ public class InputEvent {
     }
 
     public String getGroup() {
-        if (id.equals("")) {
+        if (id.isEmpty()) {
             return "";
         }
 
         String[] parts = id.split(separatingChar);
-        if (parts.length >= 3) {
+        if (parts.length > 3) {
             return parts[3];
         } else {
             return "";

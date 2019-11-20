@@ -3,7 +3,6 @@ package luisf.interfaces;
 import oscP5.OscMessage;
 import oscP5.OscP5;
 import processing.core.*;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

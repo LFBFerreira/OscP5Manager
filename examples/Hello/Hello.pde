@@ -21,7 +21,7 @@ void draw() {
 
 private InputListennerInterface oscListenner = new InputListennerInterface () {
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
         System.out.println("got it!");
     }
 };

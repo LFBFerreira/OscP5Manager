@@ -27,7 +27,7 @@ void draw() {
 
 private InputListennerInterface oscListenner = new InputListennerInterface () {
     @Override
-    public void reactToInput(InputEvent input) {
+    public void newEvent(InputEvent input) {
         // example using TouchOSC's "Simple" Layout controls
         if (input.isPage("1") && input.isName("fader1")) {
             backgroundRed = (int) input.getAsFloat(0, 255);
