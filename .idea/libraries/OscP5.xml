@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="oscP5">
+  <library name="OscP5">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/oscP5-0.9/library/oscP5.jar!/" />
     </CLASSES>

@@ -10,7 +10,7 @@ int backgroundBlue = 0;
 void setup() {
     size(200, 200, PConstants.P2D);
 
-    man = new OscP5Manager(8000, this);
+    man = new OscP5Manager(8000, true, this);
     man.registerListeners(oscListenner);
 
     PFont font = createFont("",22);

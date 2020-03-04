@@ -37,7 +37,7 @@ public class OscP5Test extends PApplet {
      * Setup Method
      */
     public void setup() {
-        man = new OscP5Manager(8000, this);
+        man = new OscP5Manager(8000, true, this);
 
         man.registerListeners(oscListenner);
 

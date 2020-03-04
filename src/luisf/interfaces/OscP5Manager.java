@@ -22,15 +22,17 @@ public class OscP5Manager {
 
     private int portNumer = 0;
 
+    private boolean printEvents = true;
     /**
      * a Constructor, usually called in the setup() method in your sketch to
      * initialize and start the Library.
      *
      * @param parent the parent PApplet
      */
-    public OscP5Manager(int oscPort, PApplet parent) {
+    public OscP5Manager(int oscPort, Boolean printEvents, PApplet parent) {
         this.parent = parent;
         this.portNumer = oscPort;
+        this.printEvents = printEvents;
 
         parent.registerMethod("dispose", this);
 
@@ -78,7 +80,7 @@ public class OscP5Manager {
 
     public boolean isConnected()
     {
-        return osc.ON == true && OscP5.OFF == false;
+        return OscP5.ON == true && OscP5.OFF == false;
     }
 
     // ================================================================
@@ -87,7 +89,6 @@ public class OscP5Manager {
 
     /**
      * OSCp5 callback method for events
-     *
      * @param oscMessage
      */
     private void oscEvent(OscMessage oscMessage) {
@@ -98,22 +99,25 @@ public class OscP5Manager {
 
     /**
      * Announces an OSC event to all listenners
-     *
      * @param event
      */
     private void announceEvent(InputEvent event) {
         if (listeners == null) {
-            System.out.println("There are no listenners");
+            System.err.println("There are no listenners");
             return;
         }
 
         if (event == null) {
-            System.out.println("The event is null!");
+            System.err.println("The event is null!");
             return;
         }
 
-        System.out.println(String.format("Event %s: %s - %f", event.inputMethod, event.id, event.getAsFloat()));
+        // print event info
+        if (printEvents) {
+            System.out.println(String.format("Event %s: %s - %s", event.inputMethod, event.id, event.getValues()));
+        }
 
+        // send event to all listenners
         listeners.forEach(l -> l.newEvent(event));
     }
 }
