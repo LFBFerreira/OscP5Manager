@@ -55,7 +55,7 @@ public class OscP5Manager {
      *
      * @param listener
      */
-    public void registerListeners(InputListennerInterface listener) {
+    public void registerListener(InputListennerInterface listener) {
         this.listeners.add(listener);
     }
 
@@ -64,8 +64,8 @@ public class OscP5Manager {
      *
      * @param listeners
      */
-    public void registerListeners(InputListennerInterface[] listeners) {
-        this.listeners = Arrays.asList(listeners);
+    public void registerListeners(List<InputListennerInterface> listeners) {
+        this.listeners.addAll(listeners);
     }
 
     public String getServerAddress()

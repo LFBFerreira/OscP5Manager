@@ -39,7 +39,7 @@ public class OscP5Test extends PApplet {
     public void setup() {
         man = new OscP5Manager(8000, true, this);
 
-        man.registerListeners(oscListenner);
+        man.registerListener(oscListenner);
 
         PFont font = createFont("", 22);
         textFont(font);
