@@ -1,11 +1,10 @@
-package luisf.interfaces;
+package luis.ferreira.libraries.ui;
 
 import oscP5.OscMessage;
 import processing.core.PVector;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class InputEvent {
     public final InputMethodEnum inputMethod;

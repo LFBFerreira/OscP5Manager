@@ -1,8 +1,8 @@
-package luisf.interfaces.test;
+package luis.ferreira.libraries.ui.test;
 
-import luisf.interfaces.InputEvent;
-import luisf.interfaces.InputListennerInterface;
-import luisf.interfaces.OscP5Manager;
+import luis.ferreira.libraries.ui.InputEvent;
+import luis.ferreira.libraries.ui.InputListennerInterface;
+import luis.ferreira.libraries.ui.OscP5Manager;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;

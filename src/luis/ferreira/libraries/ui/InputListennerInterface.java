@@ -1,4 +1,4 @@
-package luisf.interfaces;
+package luis.ferreira.libraries.ui;
 
 public interface InputListennerInterface {
 
