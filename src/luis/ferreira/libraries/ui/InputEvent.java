@@ -130,6 +130,18 @@ public class InputEvent {
     }
 
     /**
+     * Compare the input's name
+     * @param prefix input's prefix
+     * @return true if prefix is part of the name
+     */
+    public boolean isPrefix(String prefix) {
+        if (prefix == null) {
+            return false;
+        }
+        return getName().contains(prefix);
+    }
+
+    /**
      * Compare the input's group
      * @param group input's group
      * @return true if group are the same

@@ -74,13 +74,16 @@ public class OscP5Test extends PApplet {
             } else if (input.isPage("1") && input.isName("fader3")) {
                 backgroundBlue = input.getAsInt(0, 255);
 
-            } else if (input.isPage("2") && input.isName("push1") && input.isPressed()) {
-                backgroundRed = (int) random(0,255);
-                backgroundGreen = (int) random(0,255);
-                backgroundBlue = (int) random(0,255);
-            }
-
-            else if (input.isPage("2") && input.isName("push2") && input.isReleased()) {
+//            } else if (input.isPage("2") && input.isName("push1") && input.isPressed()) {
+//                backgroundRed = (int) random(0,255);
+//                backgroundGreen = (int) random(0,255);
+//                backgroundBlue = (int) random(0,255);
+//            } else if (input.isPage("2") && input.isName("push2") && input.isReleased()) {
+//                backgroundRed = (int) random(0,255);
+//                backgroundGreen = (int) random(0,255);
+//                backgroundBlue = (int) random(0,255);
+            }else if (input.isPrefix("push"))
+            {
                 backgroundRed = (int) random(0,255);
                 backgroundGreen = (int) random(0,255);
                 backgroundBlue = (int) random(0,255);

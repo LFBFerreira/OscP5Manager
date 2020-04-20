@@ -14,6 +14,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="core" level="project" />
     <orderEntry type="library" exported="" name="OscP5" level="project" />
-    <orderEntry type="library" exported="" name="ant-contrib:ant-contrib:1.0b3" level="project" />
+    <orderEntry type="library" exported="" name="ant-1.5" level="project" />
   </component>
 </module>

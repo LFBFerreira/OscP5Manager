@@ -55,10 +55,10 @@
 	<property name="install.source" location="resources/README.md"/>
 	<property name="install.destination" location="${project.dist.version}/README.md"/>
 	<property name="libprops.source" location="resources/library.properties"/>
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
-			<pathelement location="./lib/ant-contrib-1.0b3/ant-contrib-1.0b3.jar"/>
+			<pathelement location="./libraries/ant-contrib-1.0b3/ant-contrib-1.0b3.jar"/>
 		</classpath>
 	</taskdef>
 
