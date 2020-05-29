@@ -1,6 +1,4 @@
 import luis.ferreira.libraries.ui.*;
-import oscP5.OscP5;
-
 
 OscP5Manager man;
 
