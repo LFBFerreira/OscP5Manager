@@ -2,22 +2,29 @@ package luis.ferreira.libraries.ui.test;
 
 import luis.ferreira.libraries.ui.InputEvent;
 import luis.ferreira.libraries.ui.InputListennerInterface;
+import luis.ferreira.libraries.ui.InputTask;
 import luis.ferreira.libraries.ui.OscP5Manager;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
 
-public class OscP5Test extends PApplet {
+public class TasksTest extends PApplet {
     private OscP5Manager man;
 
     private int backgroundRed = 0;
     private int backgroundGreen = 0;
     private int backgroundBlue = 0;
 
-    public OscP5Test() {
+    // ================================================================
+
+    /**
+     *
+     */
+    public TasksTest() {
     }
 
     // ================================================================
+
 
     /**
      * Settings Method
@@ -30,6 +37,9 @@ public class OscP5Test extends PApplet {
      * Setup Method
      */
     public void setup() {
+        // reduce framerate to increase the chance of multiple commands per frame
+        frameRate(1);
+
         man = new OscP5Manager(8000, this);
 
         man.registerListener(oscListenner);
@@ -39,12 +49,14 @@ public class OscP5Test extends PApplet {
     }
 
     public void draw() {
+        //man.runTasks();
+
         int backgroundColor = (255 << 24) |
                 (backgroundRed << 16) |
                 (backgroundGreen << 8) |
                 backgroundBlue;
 
-        String text = man.isConnected() ? "Running!\n" + man.getServerAddress() + "\n" + man.getServerPort():
+        String text = man.isConnected() ? "Running!\n" + man.getServerAddress() + "\n" + man.getServerPort() :
                 "Not running";
 
         background(backgroundColor);
@@ -57,30 +69,14 @@ public class OscP5Test extends PApplet {
     private InputListennerInterface oscListenner = new InputListennerInterface() {
         @Override
         public void newEvent(InputEvent input) {
-            // example using TouchOSC's "Simple" Layout controls
-            if (input.isPage("1") && input.isName("fader1")) {
-                backgroundRed = input.getAsInt(0, 255);
-
-            } else if (input.isPage("1") && input.isName("fader2")) {
-                backgroundGreen = input.getAsInt(0, 255);
-
-            } else if (input.isPage("1") && input.isName("fader3")) {
-                backgroundBlue = input.getAsInt(0, 255);
-
-//            } else if (input.isPage("2") && input.isName("push1") && input.isPressed()) {
-//                backgroundRed = (int) random(0,255);
-//                backgroundGreen = (int) random(0,255);
-//                backgroundBlue = (int) random(0,255);
-//            } else if (input.isPage("2") && input.isName("push2") && input.isReleased()) {
-//                backgroundRed = (int) random(0,255);
-//                backgroundGreen = (int) random(0,255);
-//                backgroundBlue = (int) random(0,255);
-            }else if (input.isPrefix("push"))
-            {
-                backgroundRed = (int) random(0,255);
-                backgroundGreen = (int) random(0,255);
-                backgroundBlue = (int) random(0,255);
-            }
+            man.scheduleAction(new InputTask(input) {
+                public Void call() throws Exception {
+                    backgroundRed = (int) random(255);
+                    backgroundGreen = (int) random(255);
+                    backgroundBlue = (int) random(255);
+                    return null;
+                }
+            });
         }
     };
 }
