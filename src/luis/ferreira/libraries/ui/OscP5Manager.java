@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  *
  */
-public class OscP5Manager {
+public class OscP5Manager implements SchedulerInterface{
 
-    public final static String VERSION = "1.0";
+    public final static String VERSION = "1.1";
     private PApplet parent;
     private List<InputListennerInterface> listeners = new LinkedList<>();
     private OscP5 osc;
@@ -121,10 +121,14 @@ public class OscP5Manager {
         tasks.add(inputTask);
     }
 
+    // ================================================================
+
+    // Helpers
+
     /**
      *
      */
-    public void runTasks() {
+    private void runTasks() {
         if (tasks.isEmpty()) {
             return;
         }
@@ -133,12 +137,12 @@ public class OscP5Manager {
 
         if (filterRepeatedEvents) {
             localTasks = filterRepeatedEvents(tasks);
-            System.out.println("Filtered " + (tasks.size() - localTasks.size()));
+            //System.out.println("Filtered " + (tasks.size() - localTasks.size()));
         } else {
             localTasks = new LinkedList<>(tasks);
         }
 
-        System.out.println("Executing " + localTasks.size() + " tasks");
+        //System.out.println("Executing " + localTasks.size() + " tasks");
 
         for (InputTask task : localTasks) {
             try {
@@ -151,11 +155,6 @@ public class OscP5Manager {
 
         tasks.clear();
     }
-
-
-    // ================================================================
-
-    // Helpers
 
     private List<InputTask> filterRepeatedEvents(List<InputTask> tasks) {
         List<InputTask> filteredTasks = new LinkedList<>();

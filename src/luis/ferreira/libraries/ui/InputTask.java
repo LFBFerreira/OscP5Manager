@@ -1,7 +1,5 @@
 package luis.ferreira.libraries.ui;
 
-import luis.ferreira.libraries.ui.InputEvent;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -16,7 +14,7 @@ public class InputTask implements Callable {
     }
 
     @Override
-    public Object call() throws Exception {
+    public Void call() throws Exception {
         return null;
     }
 }
