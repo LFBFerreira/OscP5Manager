@@ -2,9 +2,9 @@
 Proecssing library that improves the usability of the OscP5 library. When used with the TouchOSC app (https://play.google.com/store/apps/details?id=net.hexler.touchosc_a), this library allows for fast prototyping and exploration of your Processing sketch.
 
 Features:
-* easily develop custom TouchOsc interfaces with the Editor and link them to behaviours using this library
+* easy creation of interfaces and connection to a Processing sketch
 * easy matching of component names and actions
-* scheduled actions triggered immediately or schedule before Draw
+* actions triggered immediately or schedule to active on pre-draw
 * easy mapping of values
 
 The library is still in development, although it is usable. 
