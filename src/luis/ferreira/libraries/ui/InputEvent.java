@@ -84,7 +84,7 @@ public class InputEvent {
     }
 
     /**
-     * Get the input value as a PVector
+     * Get the input value as a PVector, from [0..1]
      * @return input value
      */
     public PVector getAsXY() {
@@ -97,13 +97,17 @@ public class InputEvent {
     }
 
 
+    /**
+     * Get the input value as a PVector, from [-1..1]
+     * @return
+     */
     public PVector getAsOffsetXY() {
         if (values.size() < 2) {
             System.out.println("There are not enough values for this input");
             return new PVector();
         }
 
-        return new PVector(values.get(0) - 0.5f, values.get(1)- 0.5f);
+        return new PVector(values.get(0) * 2 - 1, values.get(1) * 2 - 1);
     }
 
     @Override
