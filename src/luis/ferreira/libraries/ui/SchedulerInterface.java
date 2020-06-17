@@ -1,5 +1,5 @@
 package luis.ferreira.libraries.ui;
 
 public interface SchedulerInterface {
-    public void scheduleAction(InputTask inputTask);
+    public void add(InputTask inputTask);
 }

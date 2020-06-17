@@ -4,9 +4,7 @@ import oscP5.OscMessage;
 import oscP5.OscP5;
 import processing.core.*;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,17 +14,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  *
  */
-public class OscP5Manager implements SchedulerInterface{
+public class OscP5Manager implements SchedulerInterface {
 
     public final static String VERSION = "1.1";
     private PApplet parent;
-    private List<InputListennerInterface> listeners = new LinkedList<>();
+    private List<InputListennerInterface> listeners = new ArrayList<>();
     private OscP5 osc;
     private int portNumer = 0;
     private boolean printEvents = true;
-    private List<InputTask> tasks = new LinkedList<>();
+    private List<InputTask> tasks = new ArrayList<>();
     private ExecutorService executor;
     private boolean filterRepeatedEvents = true;
+    private boolean schedulerLocked = false;
 
     // ================================================================
 
@@ -56,8 +55,7 @@ public class OscP5Manager implements SchedulerInterface{
         osc.dispose();
     }
 
-    public void pre()
-    {
+    public void pre() {
         runTasks();
     }
 
@@ -114,11 +112,21 @@ public class OscP5Manager implements SchedulerInterface{
         return OscP5.ON && !OscP5.OFF;
     }
 
+    // ================================================================
+
+
+    // SchedulerInterface
+
     /**
      * @param inputTask
      */
-    public void scheduleAction(InputTask inputTask) {
-        tasks.add(inputTask);
+    @Override
+    public void add(InputTask inputTask) {
+        if (!isSchedulerLocked()) {
+            tasks.add(inputTask);
+        } else {
+            System.out.println("Cannot add task to the scheduler right now");
+        }
     }
 
     // ================================================================
@@ -135,16 +143,26 @@ public class OscP5Manager implements SchedulerInterface{
 
         List<InputTask> localTasks;
 
+
+        lockScheduler();
+
         if (filterRepeatedEvents) {
             localTasks = filterRepeatedEvents(tasks);
             //System.out.println("Filtered " + (tasks.size() - localTasks.size()));
         } else {
-            localTasks = new LinkedList<>(tasks);
+            // copy the list
+            localTasks = new ArrayList<>(tasks);
         }
 
-        //System.out.println("Executing " + localTasks.size() + " tasks");
+        tasks.clear();
+        releaseScheduler();
 
-        for (InputTask task : localTasks) {
+        //System.out.println("Executing " + localTasks.size() + " tasks");
+        Iterator<InputTask> iter = localTasks.iterator();
+
+        while (iter.hasNext()) {
+            InputTask task = iter.next();
+
             try {
                 Future result = executor.submit(task);
                 result.get();
@@ -152,30 +170,53 @@ public class OscP5Manager implements SchedulerInterface{
                 e.printStackTrace();
             }
         }
-
-        tasks.clear();
     }
 
+    /**
+     *
+     */
+    private void lockScheduler() {
+        schedulerLocked = true;
+    }
+
+    /**
+     *
+     */
+    private void releaseScheduler() {
+        schedulerLocked = false;
+    }
+
+    /**
+     * @return
+     */
+    private boolean isSchedulerLocked() {
+        return schedulerLocked;
+    }
+
+    /**
+     * @param tasks
+     * @return
+     */
     private List<InputTask> filterRepeatedEvents(List<InputTask> tasks) {
         List<InputTask> filteredTasks = new LinkedList<>();
 
         // invert the taks to give priority to the most recent events
         Collections.reverse(tasks);
 
+        Iterator<InputTask> iter = tasks.iterator();
 
-        tasks.stream().forEach(t -> {
-            AtomicBoolean valid = new AtomicBoolean(true);
+        while (iter.hasNext()) {
+            InputTask task = iter.next();
 
-            // add unique tasks to the list
-            filteredTasks.forEach(ft -> valid.set(valid.get() && !ft.id.equals(t.id)));
+            AtomicBoolean isUnique = new AtomicBoolean(true);
 
-            if (valid.get()) {
-//                System.out.println(String.format("Adding %s, %s", t.id, t.values));
-                filteredTasks.add(t);
-            } else {
-//                System.out.println(String.format("Not %s, %s", t.id, t.values));
+            // only add unique tasks to the list
+            filteredTasks.forEach(ft -> isUnique.set(isUnique.get() && !ft.id.equals(task.id)));
+
+            if (isUnique.get()) {
+                filteredTasks.add(task);
             }
-        });
+        }
 
         return filteredTasks;
     }

@@ -6,14 +6,16 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/luis/ferreira/libraries/ui/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/bin" />
       <excludeFolder url="file://$MODULE_DIR$/distribution" />
+      <excludeFolder url="file://$MODULE_DIR$/sketch" />
       <excludeFolder url="file://$MODULE_DIR$/web" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="core" level="project" />
-    <orderEntry type="library" exported="" name="ant-1.5" level="project" />
+    <orderEntry type="library" name="ant-1.5" level="project" />
     <orderEntry type="library" name="oscP5" level="project" />
   </component>
 </module>

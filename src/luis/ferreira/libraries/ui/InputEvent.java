@@ -96,6 +96,16 @@ public class InputEvent {
         return new PVector(values.get(0), values.get(1));
     }
 
+
+    public PVector getAsOffsetXY() {
+        if (values.size() < 2) {
+            System.out.println("There are not enough values for this input");
+            return new PVector();
+        }
+
+        return new PVector(values.get(0) - 0.5f, values.get(1)- 0.5f);
+    }
+
     @Override
     public String toString() {
         return String.format("id = %s \tvalues = %s", id, values.toString());

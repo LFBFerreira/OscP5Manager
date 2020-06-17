@@ -35,7 +35,7 @@ public class TasksTest extends PApplet {
      */
     public void setup() {
         // reduce framerate to increase the chance of multiple commands per frame
-        frameRate(1);
+        //frameRate(2);
 
         man = new OscP5Manager(8000, this);
         man.registerListener(oscListenner);
@@ -66,15 +66,23 @@ public class TasksTest extends PApplet {
     private InputListennerInterface oscListenner = new InputListennerInterface() {
         @Override
         public void newEvent(InputEvent input) {
-            scheduler.scheduleAction(new InputTask(input) {
+            scheduler.add(new InputTask(input) {
                 public Void call(){
-//                    println("Executing");
                     backgroundRed = (int) random(255);
                     backgroundGreen = (int) random(255);
                     backgroundBlue = (int) random(255);
                     return null;
                 }
             });
+
+            if (input.isName("pan_pad")) {
+                scheduler.add(new InputTask(input) {
+                    public Void call() {
+                        System.out.println(input.getAsOffsetXY());
+                        return  null;
+                    }
+                });
+            }
         }
     };
 }
