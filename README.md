@@ -1,6 +1,11 @@
-# OscP5Manager
-Proecssing library that improves the usability of the OscP5 library. When used with the TouchOSC app (https://play.google.com/store/apps/details?id=net.hexler.touchosc_a), this library allows for fast prototyping and exploration of your Processing sketch.
+# OSCAssistant
 
+
+Processing library that Facilitates the work-flow when using the OSC protocol and the TouchOSC mobile app (https://play.google.com/store/apps/details?id=net.hexler.touchosc_a).
+
+Offers usefull methods to quickly check the name and state of a OSC control, as well as a queue to handle larges ammount of input without interfeering with the sketch
+
+  
 Features:
 * easy creation of interfaces and connection to a Processing sketch
 * easy matching of component names and actions
