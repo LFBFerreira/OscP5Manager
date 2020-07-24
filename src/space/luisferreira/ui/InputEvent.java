@@ -1,4 +1,4 @@
-package luis.ferreira.libraries.ui;
+package space.luisferreira.ui;
 
 import oscP5.OscMessage;
 import processing.core.PVector;

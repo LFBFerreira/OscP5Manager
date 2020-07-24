@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="oscP5">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/oscP5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Processing/libraries/oscP5/library/oscP5.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/../../Processing/libraries/oscP5/reference" />
+    </JAVADOC>
     <SOURCES />
   </library>
 </component>

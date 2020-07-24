@@ -1,8 +1,8 @@
-package luis.ferreira.libraries.ui.test;
+package space.luisferreira.ui.test;
 
-import luis.ferreira.libraries.ui.InputEvent;
-import luis.ferreira.libraries.ui.InputListennerInterface;
-import luis.ferreira.libraries.ui.OscP5Manager;
+import space.luisferreira.ui.InputEvent;
+import space.luisferreira.ui.InputListennerInterface;
+import space.luisferreira.ui.OscP5Manager;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
@@ -60,7 +60,6 @@ public class OscP5Test extends PApplet {
             // example using TouchOSC's "Simple" Layout controls
             if (input.isPage("1") && input.isName("fader1")) {
                 backgroundRed = input.getAsInt(0, 255);
-
             } else if (input.isPage("1") && input.isName("fader2")) {
                 backgroundGreen = input.getAsInt(0, 255);
 
@@ -80,6 +79,9 @@ public class OscP5Test extends PApplet {
                 backgroundRed = (int) random(0,255);
                 backgroundGreen = (int) random(0,255);
                 backgroundBlue = (int) random(0,255);
+            }else if (input.isName("model_sensitivity_inc"))
+            {
+               System.out.println(input.getAsFloat());
             }
         }
     };

@@ -1,4 +1,4 @@
-package luis.ferreira.libraries.ui;
+package space.luisferreira.ui;
 
 public interface SchedulerInterface {
     public void add(InputTask inputTask);

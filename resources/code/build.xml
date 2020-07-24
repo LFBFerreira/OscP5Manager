@@ -65,11 +65,11 @@
 
 	<path id="classpath">
 		<fileset dir="${classpath.local.location}" includes="${classpath.local.include}" />
-<!--		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />-->
+		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-	</path>		
+	</path>
 
-	
+
 
 	<!-- Create the time stamp -->
 	<tstamp> 
@@ -127,8 +127,8 @@ ${line}
   			<fileset dir="${project.tmp}/${project.name}"/>
   		</copy> 
 	</target>
-	
-	
+
+
 	<target name="compile">
 		<javac srcdir="${project.tmp}/${project.name}/src" destdir="${project.bin}" source="${java.target.version}" target="${java.target.version}" includeantruntime="false">
 			<classpath>
@@ -197,28 +197,28 @@ ${line}
 		<mkdir dir="${project.dist.version}/${project.name}" />
 		<move file="${project.tmp}/${project.name}" toDir="${project.dist.version}" />
 	</target>
-	
-	
-	
+
+
+
 	<target name="generate.javadoc" if="is.normal">
-	  	<!-- create the java reference of the Library -->
-		<javadoc bottom="Processing Library ${project.name} by ${author.name}. ${library.copyright}" 
-				classpath="${classpath.local.location}/core.jar;{project.bin}" 
-				destdir="${project.tmp}/${project.name}/reference" 
-				verbose="false" 
-				stylesheetfile="resources/stylesheet.css" 
-				doctitle="Javadocs: ${project.name}" 
-				public="true" version="false" 
-				windowtitle="Javadocs: ${project.name}">
- 			
- 			<link href="${javadoc.java.href}" />
+		<!-- create the java reference of the Library -->
+		<javadoc bottom="Processing Library ${project.name} by ${author.name}. ${library.copyright}"
+				 classpath="${classpath.local.location}/core.jar;{project.bin};${classpath.libraries.include}"
+				 destdir="${project.tmp}/${project.name}/reference"
+				 verbose="false"
+				 stylesheetfile="resources/stylesheet.css"
+				 doctitle="Javadocs: ${project.name}"
+				 public="true" version="false"
+				 windowtitle="Javadocs: ${project.name}">
+
+			<link href="${javadoc.java.href}" />
 			<link href="${javadoc.processing.href}" />
 			<taglet name="ExampleTaglet" path="resources/code" />
- 			<fileset dir="${project.tmp}/${project.name}/src" defaultexcludes="yes">
-			<!-- add packages to be added to reference. -->
+			<fileset dir="${project.tmp}/${project.name}/src" defaultexcludes="yes">
+				<!-- add packages to be added to reference. -->
 				<include name="**/*"/>
 			</fileset>
-	 	</javadoc>
+		</javadoc>
 	</target>
 	
 	

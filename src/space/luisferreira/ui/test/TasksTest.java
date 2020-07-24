@@ -1,6 +1,6 @@
-package luis.ferreira.libraries.ui.test;
+package space.luisferreira.ui.test;
 
-import luis.ferreira.libraries.ui.*;
+import space.luisferreira.ui.*;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;

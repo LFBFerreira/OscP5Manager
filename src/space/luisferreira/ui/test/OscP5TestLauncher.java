@@ -1,4 +1,4 @@
-package luis.ferreira.libraries.ui.test;
+package space.luisferreira.ui.test;
 
 import static processing.core.PApplet.runSketch;
 

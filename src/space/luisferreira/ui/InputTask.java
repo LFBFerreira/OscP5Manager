@@ -1,4 +1,4 @@
-package luis.ferreira.libraries.ui;
+package space.luisferreira.ui;
 
 import java.util.LinkedList;
 import java.util.List;
