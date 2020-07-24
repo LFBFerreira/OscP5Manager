@@ -1,8 +1,6 @@
 package space.luisferreira.ui.test;
 
-import space.luisferreira.ui.InputEvent;
-import space.luisferreira.ui.InputListennerInterface;
-import space.luisferreira.ui.OSCAssistant;
+import space.luisferreira.ui.*;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
