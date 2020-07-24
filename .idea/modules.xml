@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/OscP5Manager.iml" filepath="$PROJECT_DIR$/OscP5Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OSCAssistant.iml" filepath="$PROJECT_DIR$/OSCAssistant.iml" />
     </modules>
   </component>
 </project>

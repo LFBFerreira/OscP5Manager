@@ -6,38 +6,20 @@ import processing.core.PConstants;
 import processing.core.PFont;
 
 public class TasksTest extends PApplet {
-    private OscP5Manager man;
-    private SchedulerInterface scheduler;
-    private int backgroundRed = 0;
-    private int backgroundGreen = 0;
-    private int backgroundBlue = 0;
+    OSCAssistant man;
+    SchedulerInterface scheduler;
 
-    // ================================================================
-
-    /**
-     *
-     */
-    public TasksTest() {
-    }
-
-    // ================================================================
+    int backgroundRed = 0;
+    int backgroundGreen = 0;
+    int backgroundBlue = 0;
 
 
-    /**
-     * Settings Method
-     */
     public void settings() {
         size(300, 200, PConstants.P2D);
     }
 
-    /**
-     * Setup Method
-     */
     public void setup() {
-        // reduce framerate to increase the chance of multiple commands per frame
-        //frameRate(2);
-
-        man = new OscP5Manager(8000, this);
+        man = new OSCAssistant(8000, this);
         man.registerListener(oscListenner);
         scheduler = man;
 
@@ -53,7 +35,7 @@ public class TasksTest extends PApplet {
                 (backgroundGreen << 8) |
                 backgroundBlue;
 
-        String text = man.isConnected() ? "Running!\n" + man.getServerAddress() + "\n" + man.getServerPort() :
+        String text = man.isOn() ? "Running!\n" + man.getServerAddress() + "\n" + man.getServerPort() :
                 "Not running";
 
         background(backgroundColor);
@@ -66,7 +48,7 @@ public class TasksTest extends PApplet {
     private InputListennerInterface oscListenner = new InputListennerInterface() {
         @Override
         public void newEvent(InputEvent input) {
-            scheduler.add(new InputTask(input) {
+            scheduler.addTask(new InputTask(input) {
                 public Void call(){
                     backgroundRed = (int) random(255);
                     backgroundGreen = (int) random(255);
@@ -76,7 +58,7 @@ public class TasksTest extends PApplet {
             });
 
             if (input.isName("pan_pad")) {
-                scheduler.add(new InputTask(input) {
+                scheduler.addTask(new InputTask(input) {
                     public Void call() {
                         System.out.println(input.getAsOffsetXY());
                         return  null;

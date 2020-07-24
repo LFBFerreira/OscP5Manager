@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  *
  */
-public class OscP5Manager implements SchedulerInterface {
+public class OSCAssistant implements SchedulerInterface {
 
     public final static String VERSION = "1.1";
     private PApplet parent;
@@ -30,10 +30,11 @@ public class OscP5Manager implements SchedulerInterface {
     // ================================================================
 
     /**
+     * Constructor
      * @param oscPort
      * @param parent
      */
-    public OscP5Manager(int oscPort, PApplet parent) {
+    public OSCAssistant(int oscPort, PApplet parent) {
         this.parent = parent;
         this.portNumer = oscPort;
 //        this.printEvents = printEvents;
@@ -49,27 +50,34 @@ public class OscP5Manager implements SchedulerInterface {
     // ================================================================
 
     /**
-     * Processing's dispose function, frees all resources
+     * Processing's dispose function, called when program is exited
      */
     public void dispose() {
         osc.dispose();
     }
 
+    /**
+     * Processing's Pre function, called just before draw
+     */
     public void pre() {
+        // execute all tasks received since the last Draw
         runTasks();
     }
 
     /**
+     * Show or hide console notifications when a new event is triggered
      * @param print
      */
-    public void setVerbosity(boolean print) {
+    public void printEvents(boolean print) {
         printEvents = print;
     }
 
     /**
+     * Turn On or Off the option to filter events with the same name. If On, queued events with the same name as a recent one will be ignored
+     * This filters multiple events from the same control, using only the most recent
      * @param filter
      */
-    public void setFilterEvents(boolean filter) {
+    public void filterRepeatedEvents(boolean filter) {
         filterRepeatedEvents = filter;
     }
 
@@ -92,6 +100,7 @@ public class OscP5Manager implements SchedulerInterface {
     }
 
     /**
+     * Gets the OSC server address
      * @return
      */
     public String getServerAddress() {
@@ -99,6 +108,7 @@ public class OscP5Manager implements SchedulerInterface {
     }
 
     /**
+     * Gets the OSC server port
      * @return
      */
     public int getServerPort() {
@@ -106,9 +116,10 @@ public class OscP5Manager implements SchedulerInterface {
     }
 
     /**
+     * Is the server on?
      * @return
      */
-    public boolean isConnected() {
+    public boolean isOn() {
         return OscP5.ON && !OscP5.OFF;
     }
 
@@ -121,7 +132,7 @@ public class OscP5Manager implements SchedulerInterface {
      * @param inputTask
      */
     @Override
-    public void add(InputTask inputTask) {
+    public void addTask(InputTask inputTask) {
         if (!isSchedulerLocked()) {
             tasks.add(inputTask);
         } else {
@@ -134,7 +145,7 @@ public class OscP5Manager implements SchedulerInterface {
     // Helpers
 
     /**
-     *
+     * Runs all queued tasks
      */
     private void runTasks() {
         if (tasks.isEmpty()) {
@@ -143,23 +154,18 @@ public class OscP5Manager implements SchedulerInterface {
 
         List<InputTask> localTasks;
 
-
+        // lock scheduler to avoid concurrency problems
         lockScheduler();
 
-        if (filterRepeatedEvents) {
-            localTasks = filterRepeatedEvents(tasks);
-            //System.out.println("Filtered " + (tasks.size() - localTasks.size()));
-        } else {
-            // copy the list
-            localTasks = new ArrayList<>(tasks);
-        }
+        localTasks = (filterRepeatedEvents) ? filterRepeatedEvents(tasks) : new ArrayList<>(tasks);
 
         tasks.clear();
         releaseScheduler();
 
         //System.out.println("Executing " + localTasks.size() + " tasks");
-        Iterator<InputTask> iter = localTasks.iterator();
 
+        // execute all tasks
+        Iterator<InputTask> iter = localTasks.iterator();
         while (iter.hasNext()) {
             InputTask task = iter.next();
 
@@ -173,20 +179,21 @@ public class OscP5Manager implements SchedulerInterface {
     }
 
     /**
-     *
+     *  Locks access to the scheduler
      */
     private void lockScheduler() {
         schedulerLocked = true;
     }
 
     /**
-     *
+     * Releases access to the scheduler
      */
     private void releaseScheduler() {
         schedulerLocked = false;
     }
 
     /**
+     * Returns true if the scheduler is locked, false if its not
      * @return
      */
     private boolean isSchedulerLocked() {
@@ -194,6 +201,7 @@ public class OscP5Manager implements SchedulerInterface {
     }
 
     /**
+     * Filters repeated events in a list and returns only unique entries
      * @param tasks
      * @return
      */
@@ -256,7 +264,5 @@ public class OscP5Manager implements SchedulerInterface {
         // send event to all listenners
         listeners.forEach(l -> l.newEvent(event));
     }
-
-
 }
 

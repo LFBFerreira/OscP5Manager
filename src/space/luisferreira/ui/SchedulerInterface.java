@@ -1,5 +1,5 @@
 package space.luisferreira.ui;
 
 public interface SchedulerInterface {
-    public void add(InputTask inputTask);
+    public void addTask(InputTask inputTask);
 }

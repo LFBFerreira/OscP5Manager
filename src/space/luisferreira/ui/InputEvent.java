@@ -174,11 +174,12 @@ public class InputEvent {
     }
 
     /**
-     * Checks if the input was pressed
+     * Checks if the input was pressed. Not valid for faders or encoders
      * @return true if the input is equal to 1
      */
     public boolean isPressed() {
-        return getAsInt() == 1;
+        // it's "pressed" if the value is bigger then 0
+        return getAsFloat() > 0;
     }
 
     /**
