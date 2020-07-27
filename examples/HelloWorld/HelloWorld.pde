@@ -4,41 +4,45 @@
  * When a new event is triggered the background color changes randomly and the event description is sent to the console
  */
 
-import space.luisferreira.ui.*;
+import space.luisferreira.ui.OSCAssistant;
+import space.luisferreira.ui.input.*;
 import oscP5.OscP5;
 
 
 OSCAssistant assistant;
 
-int backgroundRed = 0;
-int backgroundGreen = 0;
-int backgroundBlue = 0;
+int backgroundRed=0;
+int backgroundGreen=0;
+int backgroundBlue=0;
 
 public void settings() {
   size(500, 300, PConstants.P2D);
 }
 
 public void setup() {
-  assistant = new OSCAssistant(8000, this);
+  assistant=new OSCAssistant(this);
 
   assistant.registerListener(oscListenner);
   assistant.printEvents(true);
 
-  PFont font = createFont("", 20);
+  // typical port number
+  assistant.start(8000);
+
+  PFont font=createFont("", 20);
   textFont(font);
 }
 
 public void draw() {
   // mix rgb channels
-  int backgroundColor = (255 << 24) |
-    (backgroundRed << 16) |
-    (backgroundGreen << 8) |
+  int backgroundColor=(255<<24)|
+    (backgroundRed<<16)|
+    (backgroundGreen<<8)|
     backgroundBlue;
 
   background(backgroundColor);
 
-  String text = String.format("%s\naddress %s @ %s", 
-    assistant.isOn() ? "Server active" : "Server innactive", 
+  String text=String.format("%s\naddress %s @ %s", 
+    assistant.isOn()?"Server active":"Server innactive", 
     assistant.getServerAddress(), 
     assistant.getServerPort());
 
@@ -47,14 +51,14 @@ public void draw() {
 }
 
 
-InputListennerInterface oscListenner = new InputListennerInterface() {
+InputListennerInterface oscListenner=new InputListennerInterface() {
   @Override
-    public void newEvent(InputEvent input) {
-    println(input.isPressed() ? "Button pressed" : "Button released");
+    public void newEvent(final InputEvent input) {
+    println(input.isPressed()?"Button pressed":"Button released");
 
     // any time an event is triggered, randomize the color
-    backgroundRed = (int) random(0, 255);
-    backgroundGreen = (int) random(0, 255);
-    backgroundBlue = (int) random(0, 255);
+    backgroundRed=(int)random(0, 255);
+    backgroundGreen=(int)random(0, 255);
+    backgroundBlue=(int)random(0, 255);
   }
 };

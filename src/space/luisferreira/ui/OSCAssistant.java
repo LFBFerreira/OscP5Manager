@@ -3,6 +3,10 @@ package space.luisferreira.ui;
 import oscP5.OscMessage;
 import oscP5.OscP5;
 import processing.core.*;
+import space.luisferreira.ui.input.InputEvent;
+import space.luisferreira.ui.input.InputListennerInterface;
+import space.luisferreira.ui.input.InputTask;
+import space.luisferreira.ui.input.SchedulerInterface;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class OSCAssistant implements SchedulerInterface {
 
     public final static String VERSION = "1.1";
+
     private PApplet parent;
     private List<InputListennerInterface> listeners = new ArrayList<>();
     private OscP5 osc;
@@ -31,29 +36,27 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Constructor
-     * @param oscPort
+     *
      * @param parent
      */
-    public OSCAssistant(int oscPort, PApplet parent) {
+    public OSCAssistant(PApplet parent) {
         this.parent = parent;
-        this.portNumer = oscPort;
-//        this.printEvents = printEvents;
 
         parent.registerMethod("dispose", this);
         parent.registerMethod("pre", this);
 
-        osc = new OscP5(this, oscPort);
-
         executor = Executors.newSingleThreadExecutor();
     }
 
-    // ================================================================
 
+    // ================================================================
     /**
-     * Processing's dispose function, called when program is exited
+     * Dispose function, called when program is exited
      */
     public void dispose() {
-        osc.dispose();
+        if (osc != null) {
+            osc.dispose();
+        }
     }
 
     /**
@@ -65,7 +68,17 @@ public class OSCAssistant implements SchedulerInterface {
     }
 
     /**
-     * Show or hide console notifications when a new event is triggered
+     * Start the server in the given port
+     * @param oscPort port number
+     */
+    public void start(int oscPort) {
+        System.out.println("Starting server");
+        this.portNumer = oscPort;
+        osc = new OscP5(this, portNumer);
+    }
+
+    /**
+     * Show or hide console notifications when a new event is received
      * @param print
      */
     public void printEvents(boolean print) {
@@ -73,11 +86,13 @@ public class OSCAssistant implements SchedulerInterface {
     }
 
     /**
-     * Turn On or Off the option to filter events with the same name. If On, queued events with the same name as a recent one will be ignored
-     * This filters multiple events from the same control, using only the most recent
+     * Turn On or Off the option to filter events with the same name.
+     * If On, only the last event from a given control's task is executed, the rest is discarderd
+     * If Off, all tasks are executed
+     *
      * @param filter
      */
-    public void filterRepeatedEvents(boolean filter) {
+    public void setTasksFilter(boolean filter) {
         filterRepeatedEvents = filter;
     }
 
@@ -100,15 +115,19 @@ public class OSCAssistant implements SchedulerInterface {
     }
 
     /**
-     * Gets the OSC server address
+     * Get the OSC server address
      * @return
      */
     public String getServerAddress() {
+        if (osc == null) {
+            return "";
+        }
         return osc.ip();
     }
 
     /**
      * Gets the OSC server port
+     *
      * @return
      */
     public int getServerPort() {
@@ -117,11 +136,13 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Is the server on?
+     *
      * @return
      */
     public boolean isOn() {
-        return OscP5.ON && !OscP5.OFF;
+        return osc.ON && !osc.OFF;
     }
+
 
     // ================================================================
 
@@ -129,6 +150,7 @@ public class OSCAssistant implements SchedulerInterface {
     // SchedulerInterface
 
     /**
+     * Add a task to be executed later
      * @param inputTask
      */
     @Override
@@ -157,7 +179,7 @@ public class OSCAssistant implements SchedulerInterface {
         // lock scheduler to avoid concurrency problems
         lockScheduler();
 
-        localTasks = (filterRepeatedEvents) ? filterRepeatedEvents(tasks) : new ArrayList<>(tasks);
+        localTasks = (filterRepeatedEvents) ? setTasksFilter(tasks) : new ArrayList<>(tasks);
 
         tasks.clear();
         releaseScheduler();
@@ -179,9 +201,10 @@ public class OSCAssistant implements SchedulerInterface {
     }
 
     /**
-     *  Locks access to the scheduler
+     * Locks access to the scheduler
      */
-    private void lockScheduler() {
+    private void lockScheduler()
+    {
         schedulerLocked = true;
     }
 
@@ -194,6 +217,7 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Returns true if the scheduler is locked, false if its not
+     *
      * @return
      */
     private boolean isSchedulerLocked() {
@@ -202,10 +226,11 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Filters repeated events in a list and returns only unique entries
+     *
      * @param tasks
      * @return
      */
-    private List<InputTask> filterRepeatedEvents(List<InputTask> tasks) {
+    private List<InputTask> setTasksFilter(List<InputTask> tasks) {
         List<InputTask> filteredTasks = new LinkedList<>();
 
         // invert the taks to give priority to the most recent events

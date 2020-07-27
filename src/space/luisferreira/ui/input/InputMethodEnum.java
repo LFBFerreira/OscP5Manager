@@ -1,4 +1,4 @@
-package space.luisferreira.ui;
+package space.luisferreira.ui.input;
 
 public enum InputMethodEnum {
     KEYBOARD,

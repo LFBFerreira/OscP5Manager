@@ -1,4 +1,4 @@
-package space.luisferreira.ui;
+package space.luisferreira.ui.input;
 
 import oscP5.OscMessage;
 import processing.core.PVector;
@@ -6,6 +6,9 @@ import processing.core.PVector;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * OSC input event object
+ */
 public class InputEvent {
     public final InputMethodEnum inputMethod;
 
@@ -17,7 +20,7 @@ public class InputEvent {
 
     // ================================================================
 
-   public InputEvent(OscMessage message) {
+    public InputEvent(OscMessage message) {
         inputMethod = InputMethodEnum.OSC;
         id = message.addrPattern();
         source = message.address();
@@ -31,9 +34,10 @@ public class InputEvent {
 
     /**
      * Get the input value as Float
+     *
      * @return input value
      */
-    public float getAsFloat() {
+    public float asFloat() {
         if (values.isEmpty()) {
             System.out.println("There are no values for this input");
             return 0;
@@ -44,37 +48,41 @@ public class InputEvent {
 
     /**
      * Map the input value to a Float range
+     *
      * @param min minimum value
      * @param max maximum value
      * @return mapped value
      */
-    public float getAsFloat(float min, float max) {
-        return map(getAsFloat(), 0, 1, min, max);
+    public float asFloat(float min, float max) {
+        return map(asFloat(), 0, 1, min, max);
     }
 
     /**
      * Get the input value as Int
+     *
      * @return input value
      */
-    public int getAsInt() {
+    public int asInt() {
         return values.get(0).intValue();
     }
 
     /**
      * Map the input value to a Int range
+     *
      * @param min minimum value
      * @param max maximum value
      * @return mapped value
      */
-    public int getAsInt(int min, int max) {
-        return Math.round(map(getAsFloat(), 0, 1, min, max));
+    public int asInt(int min, int max) {
+        return Math.round(map(asFloat(), 0, 1, min, max));
     }
 
     /**
      * Get the input value as Boolean
+     *
      * @return input value
      */
-    public Boolean getAsBoolean() {
+    public Boolean asBoolean() {
         if (values.isEmpty()) {
             System.out.println("There are no values for this input");
             return false;
@@ -85,9 +93,10 @@ public class InputEvent {
 
     /**
      * Get the input value as a PVector, from [0..1]
+     *
      * @return input value
      */
-    public PVector getAsXY() {
+    public PVector asXY() {
         if (values.size() < 2) {
             System.out.println("There are not enough values for this input");
             return new PVector();
@@ -99,9 +108,10 @@ public class InputEvent {
 
     /**
      * Get the input value as a PVector, from [-1..1]
+     *
      * @return
      */
-    public PVector getAsOffsetXY() {
+    public PVector asXYCentered() {
         if (values.size() < 2) {
             System.out.println("There are not enough values for this input");
             return new PVector();
@@ -121,6 +131,7 @@ public class InputEvent {
 
     /**
      * Compare the input's page name
+     *
      * @param page page name
      * @return true if names are the same
      */
@@ -133,6 +144,7 @@ public class InputEvent {
 
     /**
      * Compare the input's name
+     *
      * @param name input's name
      * @return true if names are the same
      */
@@ -145,7 +157,8 @@ public class InputEvent {
 
     /**
      * Compare the input's name
-     * @param prefix input's prefix
+     *
+     * @param prefix name's prefix
      * @return true if prefix is part of the name
      */
     public boolean isPrefix(String prefix) {
@@ -157,6 +170,7 @@ public class InputEvent {
 
     /**
      * Compare the input's group
+     *
      * @param group input's group
      * @return true if group are the same
      */
@@ -166,6 +180,7 @@ public class InputEvent {
 
     /**
      * Compare the input's sub-group
+     *
      * @param subgroup input's sub-group
      * @return true if sub-group are the same
      */
@@ -175,23 +190,26 @@ public class InputEvent {
 
     /**
      * Checks if the input was pressed. Not valid for faders or encoders
+     *
      * @return true if the input is equal to 1
      */
     public boolean isPressed() {
         // it's "pressed" if the value is bigger then 0
-        return getAsFloat() > 0;
+        return asFloat() > 0;
     }
 
     /**
      * Checks if the input was released
+     *
      * @return true if the input is equal to 0
      */
     public boolean isReleased() {
-        return getAsInt() == 0;
+        return asInt() == 0;
     }
 
     /**
      * Get the input's page name
+     *
      * @return page name
      */
     public String getPage() {
@@ -209,6 +227,7 @@ public class InputEvent {
 
     /**
      * Get the input's name
+     *
      * @return name
      */
     public String getName() {
@@ -226,6 +245,7 @@ public class InputEvent {
 
     /**
      * Get the input's group number
+     *
      * @return group number
      */
     public int getGroup() {
@@ -237,12 +257,9 @@ public class InputEvent {
         int groupNumber = 0;
 
         if (parts.length > 3) {
-            try
-            {
+            try {
                 groupNumber = Integer.parseInt(parts[3]);
-            }
-            catch(NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 System.err.println("Exception converting group number");
                 System.err.println(e.toString());
                 return 0;
@@ -257,6 +274,7 @@ public class InputEvent {
 
     /**
      * Get the input's sub-group number
+     *
      * @return sub-group number
      */
     public int getSubGroup() {
@@ -268,12 +286,9 @@ public class InputEvent {
         int groupNumber = 0;
 
         if (parts.length > 4) {
-            try
-            {
+            try {
                 groupNumber = Integer.parseInt(parts[4]);
-            }
-            catch(NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 System.err.println("Exception converting sub-group number");
                 System.err.println(e.toString());
                 return 0;
@@ -288,10 +303,10 @@ public class InputEvent {
 
     /**
      * Get the input's values
+     *
      * @return group number
      */
-    public List<Float> getValues()
-    {
+    public List<Float> getValues() {
         return values;
     }
 
@@ -308,8 +323,7 @@ public class InputEvent {
 
         String types = message.typetag();
 
-        if (types.isEmpty())
-        {
+        if (types.isEmpty()) {
             return values;
         }
 
