@@ -8,12 +8,17 @@ import space.luisferreira.ui.input.InputListennerInterface;
 import space.luisferreira.ui.input.InputTask;
 import space.luisferreira.ui.input.SchedulerInterface;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -31,6 +36,7 @@ public class OSCAssistant implements SchedulerInterface {
     private ExecutorService executor;
     private boolean filterRepeatedEvents = true;
     private boolean schedulerLocked = false;
+    private String serverAddress = "";
 
     // ================================================================
 
@@ -50,6 +56,7 @@ public class OSCAssistant implements SchedulerInterface {
 
 
     // ================================================================
+
     /**
      * Dispose function, called when program is exited
      */
@@ -69,16 +76,20 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Start the server in the given port
+     *
      * @param oscPort port number
      */
     public void start(int oscPort) {
-        System.out.println("Starting server");
+        System.out.println("Starting OSC server");
         this.portNumer = oscPort;
         osc = new OscP5(this, portNumer);
+
+        serverAddress = getInterfacesAddresses(true);
     }
 
     /**
      * Show or hide console notifications when a new event is received
+     *
      * @param print
      */
     public void printEvents(boolean print) {
@@ -115,14 +126,32 @@ public class OSCAssistant implements SchedulerInterface {
     }
 
     /**
-     * Get the OSC server address
+     *
      * @return
      */
     public String getServerAddress() {
-        if (osc == null) {
-            return "";
+        return  serverAddress;
+    }
+
+    /**
+     * Get the OSC server address
+     *
+     * @return
+     */
+    private String getInterfacesAddresses(boolean ignoreVirtual) {
+        Map<String, String> interfaces = getIPAddresses(ignoreVirtual);
+
+        if (interfaces.size() > 1) {
+            System.out.println("Network interfaces detected:");
+            for (Map.Entry<String, String> entry : interfaces.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue());
+            }
         }
-        return osc.ip();
+
+        // return the first interface's IP
+        return interfaces.entrySet().iterator().next().getValue();
+
+        //        return osc.ip();
     }
 
     /**
@@ -151,6 +180,7 @@ public class OSCAssistant implements SchedulerInterface {
 
     /**
      * Add a task to be executed later
+     *
      * @param inputTask
      */
     @Override
@@ -203,8 +233,7 @@ public class OSCAssistant implements SchedulerInterface {
     /**
      * Locks access to the scheduler
      */
-    private void lockScheduler()
-    {
+    private void lockScheduler() {
         schedulerLocked = true;
     }
 
@@ -289,5 +318,53 @@ public class OSCAssistant implements SchedulerInterface {
         // send event to all listenners
         listeners.forEach(l -> l.newEvent(event));
     }
+
+
+    /**
+     *
+     */
+    private Map<String, String> getIPAddresses(boolean ignoreVirtual) {
+        Map<String, String> interfaceIpMap = new HashMap<>();
+
+        Enumeration<NetworkInterface> net = null;
+        try { // get all interfaces; ethernet, wifi, virtual... etc
+            net = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (net == null) {
+            throw new RuntimeException("No network interfaces found.");
+        }
+
+        while (net.hasMoreElements()) {
+            NetworkInterface element = net.nextElement();
+            try {
+                if (element.isVirtual() || element.isLoopback()) {
+                    // discard virtual and loopback interface (127.0.0.1)
+                    continue;
+                }
+
+                // rest are either Wifi or ethernet interfaces
+                // loop through and print the IPs
+                Enumeration<InetAddress> addresses = element.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress ip = addresses.nextElement();
+                    if (ip instanceof Inet4Address) {
+                        if (ip.isSiteLocalAddress()) {
+                            if (!ignoreVirtual || (ignoreVirtual &&
+                                    !Pattern.compile(Pattern.quote("virtual"), Pattern.CASE_INSENSITIVE).matcher(element.getDisplayName()).find())) {
+                                interfaceIpMap.put(element.getDisplayName(), ip.getHostAddress());
+                            }
+                        }
+                    }
+                }
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return interfaceIpMap;
+    } // listIPAddresses() ends
 }
 

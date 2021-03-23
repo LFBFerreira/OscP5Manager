@@ -334,14 +334,15 @@ public class InputEvent {
                     try {
                         value = message.get(i).floatValue();
                     } catch (NumberFormatException e) {
-                        System.out.println("Number format exception");
+                        System.err.println("Number format exception");
                         e.printStackTrace();
                     }
                     values.add(value);
                     break;
 
                 default:
-                    System.out.println("Could not parse the type of the OSC message");
+                    //System.err.println("Could not parse the type of the OSC message");
+                    break;
             }
         }
 

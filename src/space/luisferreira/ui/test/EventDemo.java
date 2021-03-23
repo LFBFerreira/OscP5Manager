@@ -6,7 +6,6 @@ import processing.core.PFont;
 import processing.core.PVector;
 import space.luisferreira.ui.OSCAssistant;
 import space.luisferreira.ui.input.*;
-import oscP5.OscP5;
 
 /**
  * This demo shows how to use the values inside the events.
